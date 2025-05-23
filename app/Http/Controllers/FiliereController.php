@@ -14,7 +14,8 @@ class FiliereController extends Controller
 
     public function showAll()
 {
-    $filieres = Filiere::all();
+    $filieres = Filiere::orderBy('created_at', 'desc')->get();
+
     return view('filiere', compact('filieres'));
 }
 
@@ -22,7 +23,7 @@ class FiliereController extends Controller
 
     public function index()
 {
-    $filieres = Filiere::all();
+    $filieres = Filiere::orderBy('created_at', 'desc')->get();
     return view('filieres.index', compact('filieres'));
 }
 
@@ -33,13 +34,14 @@ class FiliereController extends Controller
     }
 
     public function store(Request $request)
-    {
+    {       
+
         $request->validate([
             'titre' => 'required|string|max:255',
             'description' => 'required|string',
             'info' => 'required|string',
             'niveau' => 'required|string',
-            'image_path' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+'image_path' => 'nullable|image|max:2048',
         ]);
     
         $imagePath = null;
@@ -56,7 +58,7 @@ class FiliereController extends Controller
             'image_path' => $imagePath,
         ]);
     
-        return redirect()->back()->with('success', 'Filière ajoutée avec succès !');
+        return redirect()->route('filieres.index')->with('success', 'Filière ajoutée avec succès !');
     }
 
 

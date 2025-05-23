@@ -1,82 +1,85 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ajouter une Filière</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            padding: 20px;
-            background-color: #f8f9fa;
-        }
-        .form-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            margin-bottom: 30px;
-            text-align: center;
-            color: #343a40;
-        }
-        .btn-primary {
-            width: 100%;
-            padding: 10px;
-        }
-    </style>
-</head>
-<body>
-    <div class="form-container">
-        <h1>Ajouter une nouvelle filière</h1>
-        @if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
+@extends('layouts.dashboard')
 
-        
+@section('title', 'Ajouter une Filière - ESIC')
+
+@section('content')
+    <link rel="stylesheet" href="{{ asset('css/filiere.css') }}">
+
+    <div class="filiere-container">
+        <div class="filiere-header">
+            <h1 class="filiere-title">Ajouter une nouvelle filière</h1>
+            <p class="filiere-subtitle">Remplissez le formulaire pour créer une nouvelle filière</p>
+        </div>
+
+        @if($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
         <form method="POST" action="{{ route('filieres.store') }}" enctype="multipart/form-data">
             @csrf
-            
+
             <div class="mb-3">
                 <label for="titre" class="form-label">Titre de la filière</label>
                 <input type="text" class="form-control" id="titre" name="titre" required>
+                @error('titre')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
-            
+
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
                 <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
             </div>
-            
+
             <div class="mb-3">
-                <label for="informations_detaillees" class="form-label">Informations détaillées</label>
+                <label for="info" class="form-label">Informations détaillées</label>
                 <textarea class="form-control" id="info" name="info" rows="5" required></textarea>
             </div>
-            
+
             <div class="mb-3">
-                <label for="niveau_requis" class="form-label">Niveau requis</label>
+                <label for="niveau" class="form-label">Niveau requis</label>
                 <select class="form-select" id="niveau" name="niveau" required>
                     <option value="">Sélectionnez un niveau</option>
-                    <option value="Bac">Bac</option>
-                    <option value="Bac+2">Bac+2</option>
-                    <option value="Bac+3">Bac+3</option>
-                    <option value="Bac+5">Bac+5</option>
+                    @foreach($niveaux as $niveau)
+                        <option value="{{ $niveau }}">{{ $niveau }}</option>
+                    @endforeach
                 </select>
             </div>
-            
-            <div class="mb-3">
-                <label for="image" class="form-label">Image de la filière</label>
-                <input type="file" class="form-control" id="image_path" name="image_path">
+
+            <div class="file-input-container">
+                <label for="image_path" class="form-label">Image de la filière</label>
+                <div class="file-input-wrapper">
+                    <label class="file-input-button">
+                        <i class="fas fa-cloud-upload-alt"></i> Choisir un fichier
+                        <input type="file" class="file-input" id="image_path" name="image_path">
+                    </label>
+                </div>
+                <div class="file-name" id="file-name">Aucun fichier sélectionné</div>
             </div>
-            
-            <button type="submit" class="btn btn-primary">Enregistrer</button>
+
+            <button type="submit" class="btn-primary">
+                <i class="fas fa-save"></i> Enregistrer
+            </button>
         </form>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    <script>
+        // Script pour afficher le nom du fichier sélectionné
+        document.getElementById('image_path').addEventListener('change', function(e) {
+            const fileName = e.target.files[0] ? e.target.files[0].name : 'Aucun fichier sélectionné';
+            document.getElementById('file-name').textContent = fileName;
+        });
+    </script>
+@endsection

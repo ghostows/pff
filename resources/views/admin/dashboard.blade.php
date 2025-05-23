@@ -1,15 +1,17 @@
+<!-- resources/views/layouts/dashboard.blade.php -->
+
 <!DOCTYPE html>
 <html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin | ESIC</title>
+    <title>@yield('title', 'Dashboard Admin | ESIC')</title>
+
+    <!-- Liens CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
-
-
+    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
 </head>
 
 <body>
@@ -24,7 +26,7 @@
 
         <div class="sidebar-menu">
             <div class="menu-title">Menu Principal</div>
-            <a href="#" class="menu-item active">
+            <a href="{{ route('admin.dashboard') }}" class="menu-item active">
                 <i class="fas fa-tachometer-alt"></i>
                 <span>Dashboard</span>
             </a>
@@ -64,9 +66,9 @@
                 <i class="fas fa-user-graduate"></i>
                 <span>Étudiants</span>
             </a>
-             <a href="{{ route('dashboard.statistiques') }}" class="menu-item">
+            <a href="{{ route('dashboard.statistiques') }}" class="menu-item">
                 <i class="fas fa-user-graduate"></i>
-                <span>statistics</span>
+                <span>Statistics</span>
             </a>
         </div>
     </aside>
@@ -89,258 +91,16 @@
             </div>
         </nav>
 
-        <!-- Content -->
+        <!-- Page content -->
         <div class="content">
-            <div class="page-header">
-                <div class="page-title">
-                    <h1>Tableau de Bord</h1>
-                    <p>Bienvenue sur votre espace d'administration</p>
-                </div>
-                <button class="btn btn-primary">
-                    <i class="fas fa-download"></i>
-                    Exporter Rapport
-                </button>
-            </div>
-
-            <!-- Stats Cards -->
-            <div class="cards-grid">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Filières</h3>
-                        <div class="card-icon primary">
-                            <i class="fas fa-graduation-cap"></i>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="card-value">{{ $nbFilieres }}</div>
-                        <div class="card-description">+{{ $filieresSemaine }} cette semaine</div>
-                    </div>
-                    <div class="card-footer">
-                        <a href="{{ route('filieres.index') }}" class="card-link">
-                            Voir toutes les filières
-                            <i class="fas fa-chevron-right"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Événements</h3>
-                        <div class="card-icon success">
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="card-value">{{ $nbEvenements }}</div>
-                        <div class="card-description">{{ $evenementsAVenir }} événements à venir</div>
-                    </div>
-                    <div class="card-footer">
-                        <a href="{{ route('evenements.index') }}" class="card-link">
-                            Voir tous les événements
-                            <i class="fas fa-chevron-right"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Actualités</h3>
-                        <div class="card-icon warning">
-                            <i class="fas fa-newspaper"></i>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="card-value">{{ $nbActualites }}</div>
-                        <div class="card-description">+{{ $actualitesMois }} ce mois-ci</div>
-                    </div>
-                    <div class="card-footer">
-                        <a href="{{ route('actualites.index') }}" class="card-link">
-                            Voir toutes les actualités
-                            <i class="fas fa-chevron-right"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Cours</h3>
-                        <div class="card-icon danger">
-                            <i class="fas fa-book"></i>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="card-value">{{ $nbCours }}</div>
-                        <div class="card-description">{{ $nouveauxCours }} nouveaux cours</div>
-                    </div>
-                    <div class="card-footer">
-                        <a href="{{ route('cours.index') }}" class="card-link">
-                            Voir tous les cours
-                            <i class="fas fa-chevron-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modules Section -->
-            <div class="modules-section">
-                <h2 class="section-title">Gestion des Modules</h2>
-
-                <div class="modules-grid">
-                    <div class="module-card">
-                        <div class="module-icon">
-                            <i class="fas fa-graduation-cap"></i>
-                        </div>
-                        <h3 class="module-title">Filières</h3>
-                        <p class="module-description">
-                            Gérer les différentes filières de l'établissement, leurs programmes et leurs responsables.
-                        </p>
-                        <div class="module-actions">
-                            <a href="{{ route('filieres.create') }}" class="btn btn-primary btn-sm">
-                                <i class="fas fa-plus"></i> Ajouter
-                            </a>
-                            <a href="{{ route('filieres.index') }}" class="btn btn-outline btn-sm">
-                                <i class="fas fa-list"></i> Liste
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="module-card">
-                        <div class="module-icon">
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
-                        <h3 class="module-title">Événements</h3>
-                        <p class="module-description">
-                            Planifier et organiser les événements académiques, culturels et professionnels.
-                        </p>
-                        <div class="module-actions">
-                            <a href="{{ route('evenements.create') }}" class="btn btn-primary btn-sm">
-                                <i class="fas fa-plus"></i> Ajouter
-                            </a>
-                            <a href="{{ route('evenements.index') }}" class="btn btn-outline btn-sm">
-                                <i class="fas fa-list"></i> Liste
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="module-card">
-                        <div class="module-icon">
-                            <i class="fas fa-newspaper"></i>
-                        </div>
-                        <h3 class="module-title">Actualités</h3>
-                        <p class="module-description">
-                            Publier et gérer les actualités de l'établissement pour informer les étudiants et le personnel.
-                        </p>
-                        <div class="module-actions">
-                            <a href="{{ route('actualites.create') }}" class="btn btn-primary btn-sm">
-                                <i class="fas fa-plus"></i> Ajouter
-                            </a>
-                            <a href="{{ route('actualites.index') }}" class="btn btn-outline btn-sm">
-                                <i class="fas fa-list"></i> Liste
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="module-card">
-                        <div class="module-icon">
-                            <i class="fas fa-book"></i>
-                        </div>
-                        <h3 class="module-title">Cours</h3>
-                        <p class="module-description">
-                            Gérer le contenu pédagogique, les ressources et les supports de cours pour les étudiants.
-                        </p>
-                        <div class="module-actions">
-                            <a href="{{ route('cours.create') }}" class="btn btn-primary btn-sm">
-                                <i class="fas fa-plus"></i> Ajouter
-                            </a>
-                            <a href="{{ route('cours.index') }}" class="btn btn-outline btn-sm">
-                                <i class="fas fa-list"></i> Liste
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Candidates Section -->
-            <div class="candidates-section">
-                <h2 class="section-title">Derniers candidats inscrits</h2>
-                <div class="candidates-grid">
-                    @foreach ($candidats as $candidat)
-                    <div class="candidate-card">
-                        <div class="candidate-header">
-                            <h3 class="candidate-name">{{ $candidat->nom }} {{ $candidat->prenom }}</h3>
-                        </div>
-                        <div class="candidate-details">
-                            <div class="detail-item">
-                                <span class="detail-label">Email:</span>
-                                <span class="detail-value">{{ $candidat->email }}</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">CV:</span>
-                                <span class="detail-value">
-                                    @if($candidat->document)
-                                    <a href="{{ asset('storage/'.$candidat->document) }}" target="_blank" class="cv-link">
-                                        <i class="fas fa-file-pdf"></i> Télécharger le CV
-                                    </a>
-                                    @else
-                                    <span class="text-muted">Non fourni</span>
-                                    @endif
-                                </span>
-                            </div>
-                        </div>
-                        <div class="candidate-actions">
-                            <form action="{{ route('candidats.approuver', $candidat->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                <button type="submit" class="btn btn-success btn-action">
-                                    <i class="fas fa-check"></i> Approuver
-                                </button>
-                            </form>
-
-                            <form action="{{ route('candidats.decliner', $candidat->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                <button type="submit" class="btn btn-danger btn-action">
-                                    <i class="fas fa-times"></i> Décliner
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-
-            <!-- Messages Section -->
-            <div class="messages-section">
-                <h2 class="section-title">Derniers messages de contact ({{ $nbMessages }})</h2>
-                <div class="messages-grid">
-                    @forelse ($messages as $message)
-                    <div class="message-card">
-                        <div class="message-header">
-                            <h3 class="message-name">{{ $message->name }}</h3>
-                            <span class="message-date">{{ $message->created_at->format('d/m/Y H:i') }}</span>
-                        </div>
-                        <div class="message-details">
-                            <p><strong>Email :</strong> {{ $message->email }}</p>
-                            <p><strong>Sujet :</strong> {{ $message->subject }}</p>
-                            <p><strong>Message :</strong> {{ Str::limit($message->message, 100) }}</p>
-                        </div>
-                    </div>
-                    @empty
-                    <p class="text-muted">Aucun message reçu pour le moment.</p>
-                    @endforelse
-                </div>
-                <div class="text-end mt-3">
-                    <a href="{{ route('contact.index') }}" class="btn btn-outline btn-sm">
-                        <i class="fas fa-envelope-open-text"></i> Voir tous les messages
-                    </a>
-                </div>
-            </div>
+            @yield('content')
         </div>
     </main>
 
+    <!-- JS -->
     <script>
-        // Animation pour les cartes
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const cards = document.querySelectorAll('.card, .module-card, .candidate-card, .message-card');
-            
             cards.forEach((card, index) => {
                 setTimeout(() => {
                     card.style.opacity = '1';

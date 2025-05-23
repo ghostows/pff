@@ -32,7 +32,7 @@ public function index()
     $evenementsAVenir = Evenement::where('date_event', '>=', now())->count();
     $actualitesMois = Actualite::where('created_at', '>=', now()->subMonth())->count();
 
-    return view('admin.dashboard', compact(
+    return view('admin.dash', compact(
         'nbFilieres', 'filieresSemaine',
         'nbEvenements', 'evenementsAVenir',
         'nbActualites', 'actualitesMois',

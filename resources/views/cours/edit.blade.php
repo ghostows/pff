@@ -1,52 +1,97 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Modifier un cours</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-<div class="container mt-5">
-    <h2>Modifier un cours</h2>
+@extends('layouts.dashboard')
+
+@section('title', 'Modifier les cours - ESIC')
+
+@section('content')
+<link rel="stylesheet" href="{{ asset('css/actualites.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<div class="actualite-container">
+    <div class="actualite-header">
+        <h2 class="actualite-title">Modifier un cours</h2>
+    </div>
+
+    @if(session('success'))
+        <div class="actualite-alert actualite-alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="actualite-alert actualite-alert-danger">
+            <ul class="mb-0">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
     <form action="{{ route('cours.update', $cours->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
-        <div class="mb-3">
-            <label for="titre" class="form-label">Titre du cours</label>
-            <input type="text" name="titre" id="titre" class="form-control" value="{{ $cours->titre }}" required>
+        <div class="actualite-form-group">
+            <label for="titre" class="actualite-form-label">Titre du cours</label>
+            <input type="text" name="titre" id="titre" class="actualite-form-control" 
+                   value="{{ old('titre', $cours->titre) }}" required>
         </div>
 
-        <div class="mb-3">
-            <label for="filiere" class="form-label">Filière</label>
-            <select name="filiere" id="filiere" class="form-select" required>
-                <option value="Informatique" {{ $cours->filiere == 'Informatique' ? 'selected' : '' }}>Informatique</option>
-                <option value="Économie" {{ $cours->filiere == 'Économie' ? 'selected' : '' }}>Économie</option>
-                <option value="Mécanique" {{ $cours->filiere == 'Mécanique' ? 'selected' : '' }}>Mécanique</option>
-                <option value="Autre" {{ $cours->filiere == 'Autre' ? 'selected' : '' }}>Autre</option>
+        <div class="actualite-form-group">
+            <label for="filiere" class="actualite-form-label">Filière</label>
+            <select name="filiere" id="filiere" class="actualite-form-control" required>
+                <option value="Informatique" {{ old('filiere', $cours->filiere) == 'Informatique' ? 'selected' : '' }}>Informatique</option>
+                <option value="Économie" {{ old('filiere', $cours->filiere) == 'Économie' ? 'selected' : '' }}>Économie</option>
+                <option value="Mécanique" {{ old('filiere', $cours->filiere) == 'Mécanique' ? 'selected' : '' }}>Mécanique</option>
+                <option value="Autre" {{ old('filiere', $cours->filiere) == 'Autre' ? 'selected' : '' }}>Autre</option>
             </select>
         </div>
 
-        <div class="mb-3">
-            <label for="annee" class="form-label">Année</label>
-            <select name="annee" id="annee" class="form-select" required>
-                <option value="1ere" {{ $cours->annee == '1ere' ? 'selected' : '' }}>1ère année</option>
-                <option value="2eme" {{ $cours->annee == '2eme' ? 'selected' : '' }}>2ème année</option>
+        <div class="actualite-form-group">
+            <label for="annee" class="actualite-form-label">Année</label>
+            <select name="annee" id="annee" class="actualite-form-control" required>
+                <option value="1ere" {{ old('annee', $cours->annee) == '1ere' ? 'selected' : '' }}>1ère année</option>
+                <option value="2eme" {{ old('annee', $cours->annee) == '2eme' ? 'selected' : '' }}>2ème année</option>
             </select>
         </div>
 
-        <div class="mb-3">
-            <label for="pdf" class="form-label">Fichier PDF (laisser vide pour garder l'actuel)</label>
-            <input type="file" name="pdf" id="pdf" class="form-control" accept="application/pdf">
+        <div class="actualite-form-group">
+            <label for="pdf" class="actualite-form-label">Fichier PDF</label>
+            <div class="actualite-file-input-container">
+                <div class="actualite-file-input-wrapper">
+                    <button type="button" class="actualite-file-input-button">
+                        <i class="fas fa-upload"></i> Changer le fichier PDF
+                    </button>
+                    <input type="file" name="pdf" id="pdf" class="actualite-file-input" accept="application/pdf">
+                </div>
+                <div id="actualite-file-name" class="actualite-file-name">Aucun fichier sélectionné</div>
+            </div>
             @if($cours->pdf_path)
-                <p class="mt-2">Fichier actuel : <a href="{{ asset('storage/' . $cours->pdf_path) }}" target="_blank">Voir le PDF</a></p>
+                <p class="actualite-current-file mt-2">
+                    Fichier actuel : 
+                    <a href="{{ asset('storage/' . $cours->pdf_path) }}" target="_blank" class="actualite-link pdf">
+                        <i class="fas fa-file-pdf"></i> Voir le PDF actuel
+                    </a>
+                </p>
             @endif
         </div>
 
-        <button type="submit" class="btn btn-primary">Mettre à jour</button>
-        <a href="{{ route('cours.index') }}" class="btn btn-secondary">Annuler</a>
+        <div class="actualite-form-actions">
+            <button type="submit" class="actualite-btn actualite-btn-primary">
+                <i class="fas fa-save"></i> Mettre à jour
+            </button>
+            <a href="{{ route('cours.index') }}" class="actualite-btn actualite-btn-secondary">
+                <i class="fas fa-times"></i> Annuler
+            </a>
+        </div>
     </form>
 </div>
-</body>
-</html>
+
+@section('scripts')
+<script>
+    document.getElementById('pdf').addEventListener('change', function(e) {
+        const fileName = e.target.files[0] ? e.target.files[0].name : 'Aucun fichier sélectionné';
+        document.getElementById('actualite-file-name').textContent = fileName;
+    });
+</script>
+@endsection
+@endsection

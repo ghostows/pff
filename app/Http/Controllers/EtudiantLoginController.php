@@ -57,6 +57,6 @@ class EtudiantLoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('etudiantlogin');
+        return redirect()->route('home');
     }
 }

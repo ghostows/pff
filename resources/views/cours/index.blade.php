@@ -1,23 +1,26 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Liste des cours</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-            <link rel="stylesheet" href="{{ asset('css/style2.css') }}">
+@extends('layouts.dashboard')
 
-</head>
-<body>
-<div class="container mt-5">
-    <h2>Liste des cours</h2>
+@section('title', 'Liste des cours - ESIC')
+
+@section('content')
+<link rel="stylesheet" href="{{ asset('css/actualites.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<div class="actualite-container">
+    <div class="actualite-header">
+        <h2 class="actualite-title">Liste des cours</h2>
+    </div>
 
     @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+        <div class="actualite-alert actualite-alert-success">
+            {{ session('success') }}
+        </div>
     @endif
 
-    <a href="{{ route('cours.create') }}" class="btn btn-success mb-3">Ajouter un nouveau cours</a>
+    <a href="{{ route('cours.create') }}" class="actualite-btn actualite-btn-primary mb-3">
+        <i class="fas fa-plus"></i> Ajouter un nouveau cours
+    </a>
 
-    <table class="table table-bordered">
+    <table class="actualite-table">
         <thead>
             <tr>
                 <th>Titre</th>
@@ -34,20 +37,27 @@
                     <td>{{ $coursItem->filiere }}</td>
                     <td>{{ $coursItem->annee }}</td>
                     <td>
-                        <a href="{{ asset('storage/' . $coursItem->pdf_path) }}" target="_blank">Voir le PDF</a>
+                        <a href="{{ asset('storage/' . $coursItem->pdf_path) }}" target="_blank" class="actualite-link">
+                            <i class="fas fa-file-pdf"></i> Voir le PDF
+                        </a>
                     </td>
                     <td>
-                        <a href="{{ route('cours.edit', $coursItem->id) }}" class="btn btn-warning btn-sm">Modifier</a>
-                        <form action="{{ route('cours.destroy', $coursItem->id) }}" method="POST" style="display:inline-block;">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-danger btn-sm" onclick="return confirm('Confirmer la suppression ?')">Supprimer</button>
-                        </form>
+                        <div class="actualite-actions">
+                            <a href="{{ route('cours.edit', $coursItem->id) }}" class="actualite-btn actualite-btn-warning btn-sm">
+                                <i class="fas fa-edit"></i> Modifier
+                            </a>
+                            <form action="{{ route('cours.destroy', $coursItem->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="actualite-btn actualite-btn-danger btn-sm" onclick="return confirm('Confirmer la suppression ?')">
+                                    <i class="fas fa-trash"></i> Supprimer
+                                </button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 </div>
-</body>
-</html>
+@endsection

@@ -1,237 +1,127 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Statistiques des Classes</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --primary-color: #4361ee;
-      --secondary-color: #3f37c9;
-      --accent-color: #4cc9f0;
-      --text-color: #2b2d42;
-      --light-bg: #f4f6f8;
-      --white: #ffffff;
-      --border-color: #e0e0e0;
-      --success-color: #4caf50;
-      --warning-color: #ff9800;
-      --danger-color: #f44336;
-    }
-    
-    body {
-      font-family: 'Roboto', sans-serif;
-      padding: 2rem;
-      background: var(--light-bg);
-      color: var(--text-color);
-      line-height: 1.6;
-    }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    
-    h1 {
-      color: var(--primary-color);
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-    
-    .stat-card {
-      background: var(--white);
-      padding: 1.5rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-    
-    .stat-card h3 {
-      margin-top: 0;
-      color: var(--primary-color);
-      font-size: 1rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    
-    .stat-card p {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin: 0.5rem 0 0;
-    }
-    
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: var(--white);
-      margin-top: 2rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    
-    th, td {
-      padding: 1rem;
-      border-bottom: 1px solid var(--border-color);
-      text-align: left;
-    }
-    
-    th {
-      background: var(--primary-color);
-      color: var(--white);
-      position: sticky;
-      top: 0;
-    }
-    
-    tr:hover {
-      background-color: rgba(76, 201, 240, 0.1);
-    }
-    
-    .btn {
-      display: inline-block;
-      background: var(--secondary-color);
-      color: var(--white);
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
-      text-decoration: none;
-      font-weight: 500;
-      transition: all 0.3s ease;
-    }
-    
-    .btn:hover {
-      background: var(--primary-color);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    
-    .chart-container {
-      background: var(--white);
-      padding: 1.5rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      margin-bottom: 2rem;
-    }
-    
-    canvas {
-      width: 100% !important;
-      height: auto !important;
-    }
-    
-    .badge {
-      display: inline-block;
-      padding: 0.25rem 0.5rem;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-    
-    .badge-success {
-      background-color: rgba(76, 175, 80, 0.2);
-      color: var(--success-color);
-    }
-    
-    .badge-warning {
-      background-color: rgba(255, 152, 0, 0.2);
-      color: var(--warning-color);
-    }
-    
-    .badge-danger {
-      background-color: rgba(244, 67, 54, 0.2);
-      color: var(--danger-color);
-    }
-    
-    @media (max-width: 768px) {
-      body {
-        padding: 1rem;
-      }
-      
-      table {
-        display: block;
-        overflow-x: auto;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1><span>📊</span> Statistiques des Classes</h1>
-    
-    <div class="stats-grid">
-      <div class="stat-card">
-        <h3>Nombre total de classes</h3>
-        <p>{{ count($stats) }}</p>
-      </div>
-      
-      <div class="stat-card">
-        <h3>Moyenne générale des notes</h3>
-        <p>{{ number_format(collect($stats)->pluck('moyenne_notes')->map(fn($n) => floatval($n))->avg(), 2) }}</p>
-      </div>
-      
-      <div class="stat-card">
-        <h3>Taux moyen d'absence</h3>
-        <p>{{ number_format(collect($stats)->pluck('moyenne_absences')->map(fn($a) => floatval($a))->avg(), 2) }} <small>absences/étudiant</small></p>
-      </div>
-    </div>
-    
-    <div class="chart-container">
-      <canvas id="barChart"></canvas>
-    </div>
-    
-    <div class="chart-container">
-      <canvas id="lineChart"></canvas>
-    </div>
-    
-    <table>
-      <thead>
-        <tr>
-          <th>Classe</th>
-          <th>Moyenne des Notes</th>
-          <th>Moyenne des Absences</th>
-          <th>Performance</th>
-          <th>Détails</th>
-        </tr>
-      </thead>
-      <tbody>
-        @foreach ($stats as $stat)
-          <tr>
-            <td>{{ $stat['classe'] }}</td>
-            <td>{{ number_format($stat['moyenne_notes'], 2) }}</td>
-            <td>{{ number_format($stat['moyenne_absences'], 2) }}</td>
-            <td>
-              @php
-                $note = floatval($stat['moyenne_notes']);
-                $absence = floatval($stat['moyenne_absences']);
-                
-                if($note >= 14 && $absence <= 2) {
-                  echo '<span class="badge badge-success">Excellente</span>';
-                } elseif($note >= 10 && $absence <= 5) {
-                  echo '<span class="badge badge-warning">Moyenne</span>';
-                } else {
-                  echo '<span class="badge badge-danger">À améliorer</span>';
-                }
-              @endphp
-            </td>
-            <td>
-              <a class="btn" href="{{ route('classe.stats', $stat['classe_id']) }}">Voir Détails</a>
-            </td>
-          </tr>
-        @endforeach
-      </tbody>
-    </table>
-  </div>
+@extends('layouts.dashboard')
 
-  <script>
-    // Configuration commune pour les graphiques
+@section('title', 'Statistiques')
+
+@section('content')
+    <link rel="stylesheet" href="{{ asset('css/stats.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+
+    <div class="stats-container">
+        <div class="stats-header">
+            <h1 class="stats-title">
+                <i class="bi bi-graph-up me-2"></i>Statistiques des Classes
+            </h1>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stats-card">
+                <div class="stats-card-icon">
+                    <i class="bi bi-building"></i>
+                </div>
+                <div class="stats-card-content">
+                    <h3>Nombre total de classes</h3>
+                    <p>{{ count($stats) }}</p>
+                </div>
+            </div>
+            
+            <div class="stats-card">
+                <div class="stats-card-icon">
+                    <i class="bi bi-journal-check"></i>
+                </div>
+                <div class="stats-card-content">
+                    <h3>Moyenne générale des notes</h3>
+                    <p>{{ number_format(collect($stats)->pluck('moyenne_notes')->map(fn($n) => floatval($n))->avg(), 2) }}</p>
+                </div>
+            </div>
+            
+            <div class="stats-card">
+                <div class="stats-card-icon">
+                    <i class="bi bi-clock-history"></i>
+                </div>
+                <div class="stats-card-content">
+                    <h3>Taux moyen d'absence</h3>
+                    <p>{{ number_format(collect($stats)->pluck('moyenne_absences')->map(fn($a) => floatval($a))->avg(), 2) }} <small>absences/étudiant</small></p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="stats-chart-container">
+            <div class="stats-chart-header">
+                <h3>Comparaison des moyennes par classe</h3>
+                <div class="stats-chart-legend">
+                    <span class="stats-legend-item">
+                        <span class="stats-legend-color" style="background-color: rgba(76, 201, 240, 0.7)"></span>
+                        Moyenne des Notes
+                    </span>
+                </div>
+            </div>
+            <canvas id="barChart"></canvas>
+        </div>
+        
+        <div class="stats-chart-container">
+            <div class="stats-chart-header">
+                <h3>Taux d'absence par classe</h3>
+                <div class="stats-chart-legend">
+                    <span class="stats-legend-item">
+                        <span class="stats-legend-color" style="background-color: rgba(244, 67, 54, 1)"></span>
+                        Moyenne des Absences
+                    </span>
+                </div>
+            </div>
+            <canvas id="lineChart"></canvas>
+        </div>
+        
+        <div class="stats-table-container">
+            <div class="stats-table-responsive">
+                <table class="stats-table">
+                    <thead>
+                        <tr>
+                            <th>Classe</th>
+                            <th>Moyenne des Notes</th>
+                            <th>Moyenne des Absences</th>
+                            <th>Performance</th>
+                            <th>Détails</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($stats as $stat)
+                        <tr>
+                            <td>{{ $stat['classe'] }}</td>
+                            <td>{{ number_format($stat['moyenne_notes'], 2) }}</td>
+                            <td>{{ number_format($stat['moyenne_absences'], 2) }}</td>
+                            <td>
+                                @php
+                                    $note = floatval($stat['moyenne_notes']);
+                                    $absence = floatval($stat['moyenne_absences']);
+                                    
+                                    if($note >= 14 && $absence <= 2) {
+                                        echo '<span class="stats-badge stats-badge-success">Excellente</span>';
+                                    } elseif($note >= 10 && $absence <= 5) {
+                                        echo '<span class="stats-badge stats-badge-warning">Moyenne</span>';
+                                    } else {
+                                        echo '<span class="stats-badge stats-badge-danger">À améliorer</span>';
+                                    }
+                                @endphp
+                            </td>
+                            <td>
+                                <a class="stats-btn" href="{{ route('classe.stats', $stat['classe_id']) }}">
+                                    <i class="bi bi-eye-fill me-1"></i> Voir Détails
+                                </a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+      // Fonction pour créer un graphique
+ // Configuration commune pour les graphiques
     const chartOptions = {
       responsive: true,
       maintainAspectRatio: false,
@@ -324,6 +214,6 @@
         }
       }
     });
-  </script>
-</body>
-</html>
+
+    </script>
+@endsection

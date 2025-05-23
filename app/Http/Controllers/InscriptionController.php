@@ -11,7 +11,7 @@ class InscriptionController extends Controller
     public function index()
 {
     $candidats = Candidat::latest()->get(); // Récupère les candidats les plus récents en premier
-    return view('dashboard', compact('candidats'));
+    return view('candidat', compact('candidats'));
 }
     public function create()
     {

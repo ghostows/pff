@@ -12,14 +12,14 @@ class CoursController extends Controller
     // 🔸 Affiche tous les cours (ex: page publique)
     public function showAll()
     {
-        $cours = Cours::all();
+    $cours = Cours::orderBy('created_at', 'desc')->get();
         return view('cours', compact('cours')); // Crée la vue `resources/views/cours.blade.php`
     }
 
     // 🔸 Liste paginée des cours pour l'admin
     public function index()
     {
-        $cours = Cours::paginate(10);
+    $cours = Cours::orderBy('created_at', 'desc')->get();
         return view('cours.index', compact('cours'));
     }
 

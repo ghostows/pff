@@ -11,12 +11,14 @@ class ActualiteController extends Controller
 
     public function showAll()
     {
-        $actualites = Actualite::all();// ou ->paginate(6)
+    $actualites = Actualite::orderBy('created_at', 'desc')->get();
+
         return view('actualites', compact('actualites'));
     }
     public function index()
     {
-        $actualites = Actualite::all();
+    $actualites = Actualite::orderBy('created_at', 'desc')->get();
+    
         return view('actualites.index', compact('actualites'));
     }
 

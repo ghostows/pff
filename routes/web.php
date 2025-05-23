@@ -29,41 +29,19 @@ use App\Http\Controllers\EtudiantDashboardController;
 /**
  * Routes d'authentification accessibles uniquement aux invités
  */
-Route::middleware('guest')->group(function () {
-    // Formulaire de connexion
-    Route::get('/connexion', [AuthController::class, 'showLoginForm'])->name('auth.connexion');
-    // Soumission du formulaire de connexion
-    Route::post('/connexion', [AuthController::class, 'login']);
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\AdminController;
 
-    // Formulaire d'inscription
-    Route::get('/inscription', [RegisterController::class, 'showRegistrationForm'])->name('auth.inscription');
-    // Soumission du formulaire d'inscription
-    Route::post('/inscription', [RegisterController::class, 'register']);
+// Routes de login
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('auth.connexion');
+Route::post('/login', [LoginController::class, 'login'])->name('auth.inscription');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+// Routes protégées par le middleware admin
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin', [DashboardController::class, 'index'])->name('admin.dashboard');
 });
 
-/**
- * Route de déconnexion (accessible aux utilisateurs connectés)
- */
-Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
-
-/**
- * Tableau de bord utilisateur (à adapter selon ton application)
- */
-Route::middleware('auth')->group(function () {
-    // Dashboard général (utilisateur non-admin)
-    Route::get('/dashboard', function () {
-        return view('dashboard'); // crée un fichier resources/views/dashboard.blade.php
-    })->name('dashboard');
-
-    // Dashboard admin
-    Route::prefix('admin')->group(function () {
-        Route::get('/dashboard', function () {
-            return view('admin.dashboard'); // crée resources/views/admin/dashboard.blade.php
-        })->name('admin.dashboard');
-    });
-});
-// Route de déconnexion
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
 
@@ -216,6 +194,7 @@ Route::get('/home/inscription/success', function () {
 
 
 
+Route::get('/candidat', [InscriptionController::class, 'index'])->name('candidat');
 
 
 Route::post('/candidats/{id}/approuver', [CandidatController::class, 'approuver'])->name('candidats.approuver');
@@ -247,7 +226,7 @@ Route::get('/etudiant/login', [EtudiantLoginController::class, 'showLoginForm'])
 Route::post('/etudiant/login', [EtudiantLoginController::class, 'login'])->name('etudiantlogin.submit');
 
 // Déconnexion étudiant
-Route::get('/etudiant/logout', [EtudiantLoginController::class, 'logout'])->name('etudiantlogout');
+Route::post('/etudiant/logout', [EtudiantLoginController::class, 'logout'])->name('etudiantlogout');
 
 // Tableau de bord étudiant (protégé par middleware custom si tu veux)
 // routes/web.php

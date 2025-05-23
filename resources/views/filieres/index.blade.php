@@ -1,27 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ asset('css/style2.css') }}">
-    <title>Document</title>
-</head>
-<body>
-<h1>Liste des filières</h1>
-<ul>
-    @foreach($filieres as $filiere)
-        <li>{{ $filiere->titre }} - {{ $filiere->niveau }}
-        <a href="{{ route('filieres.edit', $filiere->id) }}" class="btn btn-warning btn-sm">Modifier</a>
+@extends('layouts.dashboard')
 
-<form action="{{ route('filieres.destroy', $filiere->id) }}" method="POST" style="display:inline-block;">
-    @csrf
-    @method('DELETE')
-    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Supprimer cette filière ?')">Supprimer</button>
-</form>
+@section('title', 'Filières - ESIC')
 
-        </li>
-    @endforeach
-</ul>
+@section('content')
+    <link rel="stylesheet" href="{{ asset('css/filiere.css') }}">
 
-</body>
-</html>
+    <div class="filieres-container">
+        <div class="filieres-header">
+            <div class="filieres-title">
+                <h1>Liste des Filières</h1>
+                <p>Gérez les différentes filières de l'établissement</p>
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+            </div>
+            <a href="{{ route('filieres.create') }}" class="create-btn">
+                <i class="fas fa-plus"></i> Créer une filière
+            </a>
+        </div>
+
+        <table class="filieres-table">
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Niveau</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($filieres as $filiere)
+                    <tr>
+                        <td>{{ $filiere->titre }}</td>
+                        <td>{{ $filiere->niveau }}</td>
+                        <td>
+                            <div class="action-btns">
+                                <a href="{{ route('filieres.edit', $filiere->id) }}" class="edit-btn">
+                                    <i class="fas fa-edit"></i> Modifier
+                                </a>
+                                <form action="{{ route('filieres.destroy', $filiere->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="delete-btn" onclick="return confirm('Supprimer cette filière ?')">
+                                        <i class="fas fa-trash"></i> Supprimer
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="3" class="text-center">Aucune filière disponible.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+@endsection

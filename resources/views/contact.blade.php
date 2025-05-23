@@ -3,7 +3,7 @@
 
 @section('content')
 <div class="contact-page">
-        <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/contact.css') }}">
 
     {{-- Hero Section --}}
     <section class="contact-hero bg-gradient-primary">

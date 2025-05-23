@@ -1,16 +1,18 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Modifier un événement</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-<div class="container mt-5">
-    <h2>Modifier l'événement</h2>
+@extends('layouts.dashboard')
+
+@section('title', 'Modifier un événement - ESIC')
+
+@section('content')
+<link rel="stylesheet" href="{{ asset('css/evenement.css') }}">
+
+<div class="event-container">
+    <div class="event-header">
+        <h1 class="event-title">Modifier l'événement</h1>
+        <p class="event-subtitle">Mettez à jour les informations de l'événement</p>
+    </div>
 
     @if($errors->any())
-        <div class="alert alert-danger mt-3">
+        <div class="event-alert event-alert-danger">
             <ul class="mb-0">
                 @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -24,42 +26,63 @@
         @method('PUT')
 
         <div class="mb-3">
-            <label for="titre" class="form-label">Titre</label>
-            <input type="text" name="titre" id="titre" class="form-control" value="{{ $evenement->titre }}" required>
+            <label for="titre" class="event-form-label">Titre</label>
+            <input type="text" name="titre" id="titre" class="event-form-control" value="{{ old('titre', $evenement->titre) }}" required>
         </div>
 
         <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <textarea name="description" id="description" class="form-control" required>{{ $evenement->description }}</textarea>
+            <label for="description" class="event-form-label">Description</label>
+            <textarea name="description" id="description" class="event-form-control event-textarea" required>{{ old('description', $evenement->description) }}</textarea>
         </div>
 
         <div class="mb-3">
-            <label for="infos" class="form-label">Infos</label>
-            <textarea name="infos" id="infos" class="form-control" required>{{ $evenement->infos }}</textarea>
+            <label for="infos" class="event-form-label">Informations complémentaires</label>
+            <textarea name="infos" id="infos" class="event-form-control event-textarea" required>{{ old('infos', $evenement->infos) }}</textarea>
         </div>
 
-        <div class="mb-3">
-            <label for="date_event" class="form-label">Date de l'événement</label>
-            <input type="date" name="date_event" id="date_event" class="form-control" value="{{ $evenement->date_event }}" required>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="date_event" class="event-form-label">Date</label>
+                <input type="date" name="date_event" id="date_event" class="event-form-control" value="{{ old('date_event', $evenement->date_event) }}" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="heure_debut" class="event-form-label">Heure de début</label>
+                <input type="time" name="heure_debut" id="heure_debut" class="event-form-control" value="{{ old('heure_debut', $evenement->heure_debut) }}" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="heure_fin" class="event-form-label">Heure de fin</label>
+                <input type="time" name="heure_fin" id="heure_fin" class="event-form-control" value="{{ old('heure_fin', $evenement->heure_fin) }}" required>
+            </div>
         </div>
 
-        <div class="mb-3">
-            <label for="heure_debut" class="form-label">Heure de début</label>
-            <input type="time" name="heure_debut" id="heure_debut" class="form-control" value="{{ $evenement->heure_debut }}" required>
+        @if($evenement->image)
+            <div class="mb-3">
+                <label class="event-form-label">Image actuelle :</label>
+                <img src="{{ asset('storage/' . $evenement->image) }}" alt="Image de l'événement" class="event-current-image">
+            </div>
+        @endif
+
+        <div class="event-file-input-container">
+            <label for="image" class="event-form-label">Nouvelle image (laisser vide pour ne pas changer)</label>
+            <div class="event-file-input-wrapper">
+                <label class="event-file-input-button">
+                    <i class="fas fa-cloud-upload-alt"></i> Choisir un fichier
+                    <input type="file" class="event-file-input" id="image" name="image">
+                </label>
+            </div>
+            <div class="event-file-name" id="event-file-name">Aucun fichier sélectionné</div>
         </div>
 
-        <div class="mb-3">
-            <label for="heure_fin" class="form-label">Heure de fin</label>
-            <input type="time" name="heure_fin" id="heure_fin" class="form-control" value="{{ $evenement->heure_fin }}" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="image" class="form-label">Image (laisser vide pour ne pas changer)</label>
-            <input type="file" name="image" id="image" class="form-control">
-        </div>
-
-        <button type="submit" class="btn btn-primary">Mettre à jour</button>
+        <button type="submit" class="event-btn event-btn-primary">
+            <i class="fas fa-save"></i> Mettre à jour
+        </button>
     </form>
 </div>
-</body>
-</html>
+
+<script>
+    document.getElementById('image').addEventListener('change', function(e) {
+        const fileName = e.target.files[0] ? e.target.files[0].name : 'Aucun fichier sélectionné';
+        document.getElementById('event-file-name').textContent = fileName;
+    });
+</script>
+@endsection

@@ -1,50 +1,116 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Ajouter Étudiant</title>
+@extends('layouts.dashboard')
+
+@section('title', 'Ajouter un étudiant')
+
+@section('content')
+    <link rel="stylesheet" href="{{ asset('css/etudiants.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body class="p-4">
-    <h2>Ajouter un étudiant</h2>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 
-    <form action="{{ route('etudiants.store') }}" method="POST">
-        @csrf
+    <style>
+        /* Styles spécifiques pour le formulaire d'ajout d'étudiant */
 
-        <input type="text" name="identifiant" class="form-control mb-2" placeholder="Identifiant">
-        <input type="text" name="nom" class="form-control mb-2" placeholder="Nom">
-        <input type="text" name="prenom" class="form-control mb-2" placeholder="Prénom">
-        <input type="date" name="date_naissance" class="form-control mb-2">
-        <input type="email" name="email" class="form-control mb-2" placeholder="Email">
-        <input type="text" name="telephone" class="form-control mb-2" placeholder="Téléphone">
-        <input type="text" name="adresse" class="form-control mb-2" placeholder="Adresse">
-        <div class="mb-3">
-    <label for="password" class="form-label">Mot de passe</label>
-    <input type="password" class="form-control" id="password" name="password" required>
-</div>
+    </style>
 
-        <select name="classe_id" class="form-control mb-2">
-            @foreach($classes as $classe)
-                <option value="{{ $classe->id }}">{{ $classe->nom }}</option>
-            @endforeach
-        </select>
+    <div class="etudiants-container">
+        <div class="etudiants-form-container">
+            <h2 class="etudiants-form-title">
+                <i class="bi bi-person-plus-fill me-2"></i>Ajouter un étudiant
+            </h2>
 
-        <h4>Parent</h4>
-        <input type="text" name="parent_nom" class="form-control mb-2" placeholder="Nom du parent">
-        <input type="text" name="parent_telephone" class="form-control mb-2" placeholder="Téléphone du parent">
-        <input type="email" name="parent_email" class="form-control mb-2" placeholder="Email du parent">
+            <form action="{{ route('etudiants.store') }}" method="POST" class="etudiants-form">
+                @csrf
 
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
-    </form>
+                <div class="etudiants-form-group">
+                    <label class="etudiants-form-label">Identifiant</label>
+                    <input type="text" name="identifiant" class="etudiants-form-control" placeholder="Identifiant" required>
+                </div>
 
-    @if($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+                <div class="etudiants-form-group">
+                    <label class="etudiants-form-label">Nom</label>
+                    <input type="text" name="nom" class="etudiants-form-control" placeholder="Nom" required>
+                </div>
+
+                <div class="etudiants-form-group">
+                    <label class="etudiants-form-label">Prénom</label>
+                    <input type="text" name="prenom" class="etudiants-form-control" placeholder="Prénom" required>
+                </div>
+
+                <div class="etudiants-form-group">
+                    <label class="etudiants-form-label">Date de naissance</label>
+                    <input type="date" name="date_naissance" class="etudiants-form-control" required>
+                </div>
+
+                <div class="etudiants-form-group">
+                    <label class="etudiants-form-label">Email</label>
+                    <input type="email" name="email" class="etudiants-form-control" placeholder="Email" required>
+                </div>
+
+                <div class="etudiants-form-group">
+                    <label class="etudiants-form-label">Téléphone</label>
+                    <input type="text" name="telephone" class="etudiants-form-control" placeholder="Téléphone">
+                </div>
+
+                <div class="etudiants-form-group">
+                    <label class="etudiants-form-label">Adresse</label>
+                    <input type="text" name="adresse" class="etudiants-form-control" placeholder="Adresse">
+                </div>
+
+                <div class="etudiants-form-group">
+                    <label class="etudiants-form-label">Mot de passe</label>
+                    <input type="password" name="password" class="etudiants-form-control" required>
+                </div>
+
+                <div class="etudiants-form-group">
+                    <label class="etudiants-form-label">Classe</label>
+                    <select name="classe_id" class="etudiants-form-control" required>
+                        @foreach($classes as $classe)
+                            <option value="{{ $classe->id }}">{{ $classe->nom }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <h4 class="etudiants-section-title">
+                    <i class="bi bi-people-fill me-2"></i>Informations du parent
+                </h4>
+
+                <div class="etudiants-form-group">
+                    <label class="etudiants-form-label">Nom du parent</label>
+                    <input type="text" name="parent_nom" class="etudiants-form-control" placeholder="Nom du parent">
+                </div>
+
+                <div class="etudiants-form-group">
+                    <label class="etudiants-form-label">Téléphone du parent</label>
+                    <input type="text" name="parent_telephone" class="etudiants-form-control" placeholder="Téléphone du parent">
+                </div>
+
+                <div class="etudiants-form-group">
+                    <label class="etudiants-form-label">Email du parent</label>
+                    <input type="email" name="parent_email" class="etudiants-form-control" placeholder="Email du parent">
+                </div>
+
+                <div class="etudiants-form-actions">
+                    <button type="submit" class="etudiants-btn etudiants-btn-primary">
+                        <i class="bi bi-save-fill me-1"></i> Enregistrer
+                    </button>
+                    <a href="{{ route('etudiants.index') }}" class="etudiants-btn etudiants-btn-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Annuler
+                    </a>
+                </div>
+            </form>
+
+            @if($errors->any())
+                <div class="etudiants-alert etudiants-alert-danger">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <ul class="etudiants-error-list">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+        </div>
     </div>
-@endif
-</body>
-</html>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+@endsection

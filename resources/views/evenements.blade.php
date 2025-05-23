@@ -12,8 +12,10 @@
                     @endif
                     <div class="card-body">
                         <h5 class="card-title">{{ $evenement->titre }}</h5>
-                        <p class="card-text">{{ Str::limit($evenement->description, 100) }}</p>
+                        <p class="card-text">{{ $evenement->description }}</p>
                         <small class="text-muted">Date : {{ \Carbon\Carbon::parse($evenement->date)->format('d/m/Y') }}</small>
+                                                <p class="card-text">{{ $evenement->infos }}</p>
+
                     </div>
                 </div>
             </div>

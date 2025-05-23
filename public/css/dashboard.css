@@ -652,3 +652,125 @@
                 padding: 1.5rem;
             }
         }
+
+
+
+
+
+
+
+
+
+
+        /* Medium devices (tablets, 768px and up) */
+@media (max-width: 992px) {
+    .sidebar {
+        transform: translateX(-100%);
+        position: fixed;
+        z-index: 1100;
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    /* Ajout d'un overlay lorsque le sidebar est ouvert */
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1050;
+        display: none;
+    }
+    
+    .sidebar-overlay.active {
+        display: block;
+    }
+    
+    /* Bouton pour ouvrir/fermer le sidebar */
+    .sidebar-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        margin-right: 1rem;
+        cursor: pointer;
+        font-size: 1.25rem;
+        color: var(--dark);
+    }
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (max-width: 768px) {
+    .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .modules-grid, .candidates-grid, .messages-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .topbar {
+        padding: 0 1rem;
+    }
+    
+    .search-bar {
+        width: 180px;
+    }
+    
+    .user-profile .user-info {
+        display: none;
+    }
+}
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 576px) {
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .content {
+        padding: 1rem;
+    }
+    
+    .search-bar {
+        display: none;
+    }
+    
+    .search-bar.mobile-visible {
+        display: block;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        width: 100%;
+        padding: 0.5rem 1rem;
+        background: white;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .search-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        font-size: 1.25rem;
+        color: var(--dark);
+    }
+}

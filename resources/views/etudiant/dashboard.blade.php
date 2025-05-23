@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
     <style>
         :root {
             --primary-color: #4361ee;
@@ -285,9 +287,17 @@
                     <p class="lead mb-0 text-white-80">Accédez à toutes vos informations académiques en un seul endroit</p>
                 </div>
                 <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                    <a href="{{ route('etudiantlogout') }}" class="btn btn-logout">
-                        <i class="bi bi-box-arrow-right me-1"></i> Déconnexion
-                    </a>
+                    <!-- Déconnexion sécurisée -->
+                     <form method="POST" action="{{ route('etudiantlogout') }}">
+    @csrf
+<button type="submit" class="btn-logout">
+    <i class="fas fa-sign-out-alt" style="margin-right: 8px;"></i> Se déconnecter
+</button>
+                     </form>
+
+
+
+
                 </div>
             </div>
         </div>

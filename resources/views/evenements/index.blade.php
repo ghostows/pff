@@ -1,32 +1,34 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Liste des Événements</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-            <link rel="stylesheet" href="{{ asset('css/style2.css') }}">
+@extends('layouts.dashboard')
 
-</head>
-<body>
-<div class="container mt-5">
-    <h2>Liste des Événements</h2>
+@section('title', 'Liste des Événements - ESIC')
+
+@section('content')
+<link rel="stylesheet" href="{{ asset('css/evenement.css') }}">
+
+<div class="event-container">
+    <div class="event-header">
+        <h1 class="event-title">Liste des Événements</h1>
+        <p class="event-subtitle">Gérez les événements de l'établissement</p>
+    </div>
 
     @if(session('success'))
-        <div class="alert alert-success mt-3">
+        <div class="event-alert event-alert-success">
             {{ session('success') }}
         </div>
     @endif
 
-    <a href="{{ route('evenements.create') }}" class="btn btn-primary mb-3">Ajouter un événement</a>
+    <a href="{{ route('evenements.create') }}" class="event-btn event-btn-primary mb-4">
+        <i class="fas fa-plus"></i> Ajouter un événement
+    </a>
 
-    <table class="table table-bordered">
+    <table class="event-table">
         <thead>
             <tr>
                 <th>Titre</th>
                 <th>Description</th>
-                <th>Date de l'événement</th>
-                <th>Heure de début</th>
-                <th>Heure de fin</th>
+                <th>Date</th>
+                <th>Heure début</th>
+                <th>Heure fin</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -35,22 +37,27 @@
                 <tr>
                     <td>{{ $evenement->titre }}</td>
                     <td>{{ \Str::limit($evenement->description, 50) }}</td>
-                    <td>{{ $evenement->date_event }}</td>
-                    <td>{{ $evenement->heure_debut }}</td>
-                    <td>{{ $evenement->heure_fin }}</td>
+                    <td>{{ $evenement->date_event->format('d/m/Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($evenement->heure_debut)->format('H:i') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($evenement->heure_fin)->format('H:i') }}</td>
                     <td>
-                        <a href="{{ route('evenements.edit', $evenement->id) }}" class="btn btn-warning btn-sm">Modifier</a>
-
-                        <form action="{{ route('evenements.destroy', $evenement->id) }}" method="POST" style="display:inline-block;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')">Supprimer</button>
-                        </form>
+                        <div class="event-actions">
+                            <a href="{{ route('evenements.edit', $evenement->id) }}" class="event-btn event-btn-warning">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            
+                            <form action="{{ route('evenements.destroy', $evenement->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="event-btn event-btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 </div>
-</body>
-</html>
+@endsection
