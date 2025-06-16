@@ -1,6 +1,20 @@
+<style>
+    
+#navbar-brand {
+    font-size: 1.7rem;
+    font-weight: bold;
+    color: #004080;
+    letter-spacing: 1px;
+}
+#navbar-brand:hover {
+    color: #0066cc;
+    text-decoration: none;
+}
 
+</style>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="{{ route('home') }}">  
+    <a class="navbar-brand" href="{{ route('home') }}" id="navbar-brand">
+        CMFP
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>

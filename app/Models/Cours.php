@@ -18,7 +18,7 @@ class Cours extends Model
 
     public function classe()
 {
-    return $this->belongsTo(Classe::class, 'filiere'); // filiere est en fait classe_id
+    return $this->belongsTo(Classe::class, 'filiere'); 
 }
 
 }

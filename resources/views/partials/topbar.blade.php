@@ -9,9 +9,13 @@
         <div class="user-info">
             <span class="user-name">{{ Auth::user()->nom ?? 'Admin' }}</span>
             <span class="user-role">Administrateur</span>
-            <a href="{{ route('etudiantlogout') }}" class="btn btn-logout">
-                        <i class="bi bi-box-arrow-right me-1"></i> Déconnexion
-                    </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
+    @csrf
+    <button type="submit" class="btn btn-logout" style="background: none; border: none; cursor: pointer;">
+        <i class="bi bi-box-arrow-right me-1"></i> Déconnexion
+    </button>
+</form>
+
         </div>
     </div>
 </nav>
